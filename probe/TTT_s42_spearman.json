@@ -1,0 +1,32 @@
+{
+  "s1_d_linear_dem_reliance": {
+    "spearman_rho": 0.2729779450305475,
+    "p": 4.015529634239438e-06,
+    "n": 277
+  },
+  "s1_d_spatial_dem_reliance": {
+    "spearman_rho": 0.13975112550614036,
+    "p": 0.019974089976887672,
+    "n": 277
+  },
+  "s2_d_linear_dem_reliance": {
+    "spearman_rho": 0.05064096098179233,
+    "p": 0.40115453332479273,
+    "n": 277
+  },
+  "s2_d_spatial_dem_reliance": {
+    "spearman_rho": -0.125903884043633,
+    "p": 0.03623117816920856,
+    "n": 277
+  },
+  "s3_d_linear_dem_reliance": {
+    "spearman_rho": 0.2237255488460621,
+    "p": 0.00017375970419656716,
+    "n": 277
+  },
+  "s3_d_spatial_dem_reliance": {
+    "spearman_rho": 0.0796596213187599,
+    "p": 0.18619924379860067,
+    "n": 277
+  }
+}

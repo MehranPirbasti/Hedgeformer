@@ -1,0 +1,122 @@
+{
+  "run_dir": "experiments\\runs\\SRA_s1337",
+  "variant": "SRA",
+  "seed": 1337,
+  "num_classes": 7,
+  "best": {
+    "f1": {
+      "value": 0.43082558922119896,
+      "epoch": 11
+    },
+    "rmse": {
+      "value": 0.6457740756691586,
+      "epoch": 1
+    },
+    "chamfer": {
+      "value": 21.413602625227206,
+      "epoch": 4
+    },
+    "hd95": {
+      "value": 78.3839892451535,
+      "epoch": 17
+    }
+  },
+  "soup": {
+    "ingredient_val_f1": {
+      "best_f1.pth": 0.43082558922119896,
+      "best_hd95.pth": 0.42587120785511184,
+      "best_chamfer.pth": 0.41564231714737737,
+      "epoch_042.pth": 0.3827414300418982,
+      "epoch_041.pth": 0.3818228854418034,
+      "epoch_043.pth": 0.38045280888681937,
+      "epoch_045.pth": 0.37983861928323964,
+      "epoch_046.pth": 0.3796067590518522,
+      "epoch_044.pth": 0.3795547498674793,
+      "epoch_047.pth": 0.3793899157495907,
+      "epoch_048.pth": 0.3784246053621982,
+      "epoch_049.pth": 0.3782739987786431,
+      "epoch_050.pth": 0.37738069552321624,
+      "best_rmse.pth": 0.36685047433178025
+    },
+    "greedy_chosen": [
+      "best_f1.pth",
+      "best_hd95.pth"
+    ],
+    "greedy_val_f1": 0.4325080170759491,
+    "greedy_log": [
+      {
+        "path": "best_f1.pth",
+        "accepted": true,
+        "val_f1": 0.43082558922119896
+      },
+      {
+        "path": "best_hd95.pth",
+        "accepted": true,
+        "val_f1": 0.4325080170759491
+      },
+      {
+        "path": "best_chamfer.pth",
+        "accepted": false,
+        "val_f1": 0.43191992190360934
+      },
+      {
+        "path": "epoch_042.pth",
+        "accepted": false,
+        "val_f1": 0.4311577641924286
+      },
+      {
+        "path": "epoch_041.pth",
+        "accepted": false,
+        "val_f1": 0.43094910852520885
+      },
+      {
+        "path": "epoch_043.pth",
+        "accepted": false,
+        "val_f1": 0.4312697137852772
+      },
+      {
+        "path": "epoch_045.pth",
+        "accepted": false,
+        "val_f1": 0.4314299779968876
+      },
+      {
+        "path": "epoch_046.pth",
+        "accepted": false,
+        "val_f1": 0.431371059516142
+      },
+      {
+        "path": "epoch_044.pth",
+        "accepted": false,
+        "val_f1": 0.43102131674700733
+      },
+      {
+        "path": "epoch_047.pth",
+        "accepted": false,
+        "val_f1": 0.4314311746600018
+      },
+      {
+        "path": "epoch_048.pth",
+        "accepted": false,
+        "val_f1": 0.43130274694449877
+      },
+      {
+        "path": "epoch_049.pth",
+        "accepted": false,
+        "val_f1": 0.43115218198816446
+      },
+      {
+        "path": "epoch_050.pth",
+        "accepted": false,
+        "val_f1": 0.43114637845973325
+      },
+      {
+        "path": "best_rmse.pth",
+        "accepted": false,
+        "val_f1": 0.429611619813356
+      }
+    ],
+    "uniform_val_f1": 0.4280442345776129,
+    "best_single_val_f1": 0.43082558922119896
+  },
+  "finished": "2026-09-28 13:32:53"
+}

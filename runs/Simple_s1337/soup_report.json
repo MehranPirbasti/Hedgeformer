@@ -1,0 +1,99 @@
+{
+  "ingredient_val_f1": {
+    "best_f1.pth": 0.4335549421281967,
+    "best_chamfer.pth": 0.433396458901368,
+    "best_hd95.pth": 0.42998341997965894,
+    "epoch_042.pth": 0.3947332370260948,
+    "epoch_041.pth": 0.39469048889325836,
+    "epoch_043.pth": 0.3925077453292151,
+    "epoch_046.pth": 0.3912245511272502,
+    "epoch_048.pth": 0.38999107484762724,
+    "epoch_050.pth": 0.38951723461574117,
+    "epoch_045.pth": 0.38945632927637686,
+    "epoch_044.pth": 0.3894120027561456,
+    "epoch_047.pth": 0.3893050871499894,
+    "epoch_049.pth": 0.38858296048774815,
+    "best_rmse.pth": 0.3768254839729997
+  },
+  "greedy_chosen": [
+    "best_f1.pth",
+    "best_chamfer.pth",
+    "epoch_042.pth",
+    "best_rmse.pth"
+  ],
+  "greedy_val_f1": 0.44097979018919087,
+  "greedy_log": [
+    {
+      "path": "best_f1.pth",
+      "accepted": true,
+      "val_f1": 0.4335549421281967
+    },
+    {
+      "path": "best_chamfer.pth",
+      "accepted": true,
+      "val_f1": 0.4348070764180119
+    },
+    {
+      "path": "best_hd95.pth",
+      "accepted": false,
+      "val_f1": 0.43403041065507403
+    },
+    {
+      "path": "epoch_042.pth",
+      "accepted": true,
+      "val_f1": 0.4356927587768746
+    },
+    {
+      "path": "epoch_041.pth",
+      "accepted": false,
+      "val_f1": 0.4334348209721374
+    },
+    {
+      "path": "epoch_043.pth",
+      "accepted": false,
+      "val_f1": 0.43304296987289714
+    },
+    {
+      "path": "epoch_046.pth",
+      "accepted": false,
+      "val_f1": 0.4333392921216044
+    },
+    {
+      "path": "epoch_048.pth",
+      "accepted": false,
+      "val_f1": 0.43320987011747697
+    },
+    {
+      "path": "epoch_050.pth",
+      "accepted": false,
+      "val_f1": 0.4330506155973232
+    },
+    {
+      "path": "epoch_045.pth",
+      "accepted": false,
+      "val_f1": 0.4331945530596436
+    },
+    {
+      "path": "epoch_044.pth",
+      "accepted": false,
+      "val_f1": 0.43317377324257206
+    },
+    {
+      "path": "epoch_047.pth",
+      "accepted": false,
+      "val_f1": 0.4332760947763848
+    },
+    {
+      "path": "epoch_049.pth",
+      "accepted": false,
+      "val_f1": 0.43307442409000324
+    },
+    {
+      "path": "best_rmse.pth",
+      "accepted": true,
+      "val_f1": 0.44097979018919087
+    }
+  ],
+  "uniform_val_f1": 0.4343195797331124,
+  "best_single_val_f1": 0.4335549421281967
+}

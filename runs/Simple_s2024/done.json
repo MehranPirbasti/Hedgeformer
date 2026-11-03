@@ -1,0 +1,124 @@
+{
+  "run_dir": "experiments\\runs\\Simple_s2024",
+  "variant": "Simple",
+  "seed": 2024,
+  "num_classes": 7,
+  "best": {
+    "f1": {
+      "value": 0.43284898006619626,
+      "epoch": 10
+    },
+    "rmse": {
+      "value": 0.6297762368606535,
+      "epoch": 1
+    },
+    "chamfer": {
+      "value": 22.872490941173446,
+      "epoch": 2
+    },
+    "hd95": {
+      "value": 81.14030575404695,
+      "epoch": 9
+    }
+  },
+  "soup": {
+    "ingredient_val_f1": {
+      "best_f1.pth": 0.43284898006619626,
+      "best_hd95.pth": 0.43084215696254746,
+      "best_chamfer.pth": 0.39944267663263505,
+      "epoch_044.pth": 0.3891692027592541,
+      "epoch_042.pth": 0.38894808760488203,
+      "epoch_045.pth": 0.3882503949941892,
+      "epoch_047.pth": 0.3879853385429702,
+      "epoch_041.pth": 0.387775308716468,
+      "epoch_046.pth": 0.3875015901379056,
+      "epoch_043.pth": 0.38740059500205154,
+      "epoch_048.pth": 0.3868878450237511,
+      "epoch_050.pth": 0.3866374938883144,
+      "epoch_049.pth": 0.3853585726098018,
+      "best_rmse.pth": 0.3773082893381594
+    },
+    "greedy_chosen": [
+      "best_f1.pth",
+      "best_hd95.pth",
+      "epoch_044.pth",
+      "best_rmse.pth"
+    ],
+    "greedy_val_f1": 0.44018737376833006,
+    "greedy_log": [
+      {
+        "path": "best_f1.pth",
+        "accepted": true,
+        "val_f1": 0.43284898006619626
+      },
+      {
+        "path": "best_hd95.pth",
+        "accepted": true,
+        "val_f1": 0.43489023010199584
+      },
+      {
+        "path": "best_chamfer.pth",
+        "accepted": false,
+        "val_f1": 0.42963550700601016
+      },
+      {
+        "path": "epoch_044.pth",
+        "accepted": true,
+        "val_f1": 0.43729787077211363
+      },
+      {
+        "path": "epoch_042.pth",
+        "accepted": false,
+        "val_f1": 0.43462370818510176
+      },
+      {
+        "path": "epoch_045.pth",
+        "accepted": false,
+        "val_f1": 0.43457400203376945
+      },
+      {
+        "path": "epoch_047.pth",
+        "accepted": false,
+        "val_f1": 0.43446425607235095
+      },
+      {
+        "path": "epoch_041.pth",
+        "accepted": false,
+        "val_f1": 0.434402784437342
+      },
+      {
+        "path": "epoch_046.pth",
+        "accepted": false,
+        "val_f1": 0.434443978439839
+      },
+      {
+        "path": "epoch_043.pth",
+        "accepted": false,
+        "val_f1": 0.4345900271067024
+      },
+      {
+        "path": "epoch_048.pth",
+        "accepted": false,
+        "val_f1": 0.43440508673616074
+      },
+      {
+        "path": "epoch_050.pth",
+        "accepted": false,
+        "val_f1": 0.43447826643483534
+      },
+      {
+        "path": "epoch_049.pth",
+        "accepted": false,
+        "val_f1": 0.43435302574696205
+      },
+      {
+        "path": "best_rmse.pth",
+        "accepted": true,
+        "val_f1": 0.44018737376833006
+      }
+    ],
+    "uniform_val_f1": 0.4307320945255003,
+    "best_single_val_f1": 0.43284898006619626
+  },
+  "finished": "2026-09-25 14:20:28"
+}

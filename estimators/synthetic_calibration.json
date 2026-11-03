@@ -1,0 +1,16 @@
+{
+  "isolated": {
+    "n": 40,
+    "coarea_ratio_mean": 0.9354242341254022,
+    "coarea_ratio_std": 0.008934452425884335,
+    "kulpa_ratio_mean": 1.0019427517769512,
+    "kulpa_ratio_std": 0.013197076720114932
+  },
+  "crossing": {
+    "n": 40,
+    "coarea_ratio_mean": 0.900439907533333,
+    "coarea_ratio_std": 0.06384956365431832,
+    "kulpa_ratio_mean": 0.9997835374669544,
+    "kulpa_ratio_std": 0.010737191681492071
+  }
+}

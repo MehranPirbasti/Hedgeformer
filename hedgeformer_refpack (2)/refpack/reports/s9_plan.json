@@ -1,0 +1,197 @@
+{
+  "plan": {
+    "n_tasks": 17,
+    "training_runs": 43,
+    "blocking": [
+      "data_audit",
+      "controlled_runs",
+      "baselines",
+      "loss_ablation",
+      "complexity",
+      "ordinal",
+      "match_rate"
+    ],
+    "tasks": [
+      {
+        "key": "data_audit",
+        "section": "1",
+        "title": "Lock the data facts",
+        "phase": 1,
+        "runs": 0,
+        "blocks_submission": true,
+        "why": "Provenance of the elevation layer, acquisition dates, co-registration and class support. The physical argument in the introduction is unsupported until the dates exist in the paper.",
+        "entry_point": "refpack.s1_data_audit"
+      },
+      {
+        "key": "controlled_runs",
+        "section": "2.1/2.3",
+        "title": "Rerun all variants under one protocol",
+        "phase": 1,
+        "runs": 9,
+        "blocks_submission": true,
+        "why": "Equal epochs, one checkpoint criterion, three seeds. The current margins sit in the fourth decimal and cannot be defended from a single seed.",
+        "entry_point": "refpack.s2_protocol.run_matrix"
+      },
+      {
+        "key": "data_fraction",
+        "section": "2.2",
+        "title": "Data-efficiency ablation",
+        "phase": 1,
+        "runs": 18,
+        "blocks_submission": false,
+        "why": "Turns the unequal data volume from a flaw into the strongest claim available: the adaptive operator leads by more when data is scarce.",
+        "entry_point": "refpack.s2_protocol.build_stratified_subsets"
+      },
+      {
+        "key": "baselines",
+        "section": "3",
+        "title": "External baselines",
+        "phase": 1,
+        "runs": 12,
+        "blocks_submission": true,
+        "why": "Single-modality, early fusion, late fusion and a classical non-learning method. Without these there is no claim of state of the art, only an internal comparison.",
+        "entry_point": "refpack.s3_baselines"
+      },
+      {
+        "key": "loss_ablation",
+        "section": "4",
+        "title": "Loss ablation",
+        "phase": 1,
+        "runs": 4,
+        "blocks_submission": true,
+        "why": "Four loss components are claimed as contributions and none is ablated.",
+        "entry_point": "refpack.s4_ablation.ABLATION_GRID"
+      },
+      {
+        "key": "complexity",
+        "section": "2.4",
+        "title": "Parameters and inference cost",
+        "phase": 1,
+        "runs": 0,
+        "blocks_submission": true,
+        "why": "Three FILL entries in the complexity table, plus the seconds per square kilometre that the national-monitoring motivation implies.",
+        "entry_point": "refpack.s2_protocol.parameter_report"
+      },
+      {
+        "key": "ordinal",
+        "section": "6.1",
+        "title": "Ordinal metrics and confusion matrix",
+        "phase": 1,
+        "runs": 0,
+        "blocks_submission": true,
+        "why": "Height error in metres is the number that makes the results legible next to the canopy-height literature and defuses the objection to a macro F1 of 0.43.",
+        "entry_point": "refpack.s6_metrics.ordinal_metrics"
+      },
+      {
+        "key": "match_rate",
+        "section": "9",
+        "title": "Report the instance match rate",
+        "phase": 1,
+        "runs": 0,
+        "blocks_submission": true,
+        "why": "Matched-instance geometry improves trivially for a model that detects fewer and easier instances. The match rate is already computed as connectivity correctness; it only has to be reported next to every distance metric.",
+        "entry_point": "validation.FullMetrics"
+      },
+      {
+        "key": "modality_dropout",
+        "section": "5.2",
+        "title": "Modality ablation at inference",
+        "phase": 2,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "Proves the mechanism directly and costs no training. The predicted cross-over between class 1a and class 6 is the result to look for.",
+        "entry_point": "refpack.s5_mechanism.modality_ablation"
+      },
+      {
+        "key": "weight_probe",
+        "section": "5.1",
+        "title": "Fast-weight probe",
+        "phase": 2,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "The signature figure. Fast-weight movement against canopy signal to noise, contrasted with the frozen baseline.",
+        "entry_point": "refpack.s5_mechanism.run_fast_weight_probe"
+      },
+      {
+        "key": "phenology",
+        "section": "5.3",
+        "title": "Synthetic phenology stress",
+        "phase": 2,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "Measures the leaf-off to leaf-on mismatch that motivates the whole architecture instead of asserting it.",
+        "entry_point": "refpack.s5_mechanism.phenology_curve"
+      },
+      {
+        "key": "ceiling",
+        "section": "6.3",
+        "title": "Achievable ceiling",
+        "phase": 2,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "A general tool other groups will borrow, and the permanent answer to reviewers who object to absolute scores.",
+        "entry_point": "refpack.s6_metrics.achievable_ceiling"
+      },
+      {
+        "key": "coarea_length",
+        "section": "7.1",
+        "title": "Threshold-free length estimator",
+        "phase": 2,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "Length straight from the proximity field, with no threshold and no skeletonisation.",
+        "entry_point": "refpack.s7_length.length_from_field"
+      },
+      {
+        "key": "capture_recapture",
+        "section": "7.3",
+        "title": "True network length",
+        "phase": 3,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "The first defensible estimate of how much hedgerow actually exists in this landscape, and what share the reference product sees.",
+        "entry_point": "refpack.s7_length.network_length_report"
+      },
+      {
+        "key": "connectivity",
+        "section": "6.5",
+        "title": "Landscape connectivity retention",
+        "phase": 3,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "Connects segmentation quality to ecological function.",
+        "entry_point": "refpack.s6_metrics.connectivity_retention"
+      },
+      {
+        "key": "carbon",
+        "section": "6.6",
+        "title": "Carbon bias of a binary map",
+        "phase": 3,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "The sentence that earns citations outside computer vision. Needs sourced biomass coefficients first.",
+        "entry_point": "refpack.s6_metrics.binary_map_carbon_bias"
+      },
+      {
+        "key": "benchmark",
+        "section": "8",
+        "title": "Feature-level benchmark release",
+        "phase": 3,
+        "runs": 0,
+        "blocks_submission": false,
+        "why": "Publishable under the Airbus licence and, as far as we can tell, without precedent in this field.",
+        "entry_point": "refpack.s8_benchmark.export_features"
+      }
+    ]
+  },
+  "budget": {
+    "full_programme_runs": 43,
+    "minimal_defensible_runs": 34,
+    "note": "The minimal programme drops the middle data fraction, keeps two fractions, four baselines and four loss ablations. It still supports every claim the paper makes.",
+    "highest_return_if_time_is_short": [
+      "modality_dropout",
+      "ordinal",
+      "ceiling"
+    ]
+  }
+}
