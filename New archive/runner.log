@@ -1,0 +1,1660 @@
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+[stage selftest] FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 192, in stage
+    fn(*a, **kw)
+  File "B:\PhD\Classification\Codes\run_all.py", line 349, in selftest
+    assert net(x1, m1)['seg_logits'].shape == (1, 4, 64, 64)
+           ^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 560, in forward
+    fused = [self.fuse_modules[i](f_dem[i], f_ms[i]) for i in range(3)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 560, in <listcomp>
+    fused = [self.fuse_modules[i](f_dem[i], f_ms[i]) for i in range(3)]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 343, in forward
+    return self.fusion_mixer(post_prime, pre_prime)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 292, in forward
+    raise ValueError(f'token mixer built for {self.num_tokens} tokens but got {H0}x{W0}={H0*W0}; '
+ValueError: token mixer built for 4096 tokens but got 16x16=256; the fusion variants SRA/TTT need input size == img_size given at construction (default 256)
+
+SELF-TEST FAILED -- refusing to start the experiments (use --no-selftest to override).
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.7 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.8 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+[stage selftest] FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 192, in stage
+    fn(*a, **kw)
+  File "B:\PhD\Classification\Codes\run_all.py", line 347, in selftest
+    net = build_model(v, 4, pretrained=False, img_size=64).eval()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 595, in build_model
+    return HedgeFormer(num_class=num_class, encoder_weights='imagenet' if pretrained else None,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\model.py", line 532, in __init__
+    self.fuse_modules = nn.ModuleList([
+                                      ^
+  File "B:\PhD\Classification\Codes\model.py", line 533, in <listcomp>
+    FusionEncoder(
+  File "B:\PhD\Classification\Codes\model.py", line 361, in __init__
+    self.fusion_mixer = _MLPMixer(channels, height, width, tokens_hidden_dim, channels * 4)
+                        ^^^^^^^^^
+NameError: name '_MLPMixer' is not defined
+
+SELF-TEST FAILED -- refusing to start the experiments (use --no-selftest to override).
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.8 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.1 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.2 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.4 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+!! train Simple_s42 FAILED:
+Traceback (most recent call last):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1310, in _try_get_data
+    data = self._data_queue.get(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\queue.py", line 179, in get
+    raise Empty
+_queue.Empty
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 331, in train_epoch
+    for i, (ms, dem, dist_gt, mask, skeleton, _) in enumerate(pbar):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\tqdm\std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 741, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1524, in _next_data
+    idx, data = self._get_data()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1473, in _get_data
+    success, data = self._try_get_data()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1323, in _try_get_data
+    raise RuntimeError(
+RuntimeError: DataLoader worker (pid(s) 14660, 27892, 31104, 20384) exited unexpectedly
+
+
+[2/27] TRAIN Simple_s1337  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.5 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    todo      
+   Simple_s1337                       fusion_core    todo      
+   Simple_s2024                       fusion_core    todo      
+   SRA_s42                            fusion_core    todo      
+   SRA_s1337                          fusion_core    todo      
+   SRA_s2024                          fusion_core    todo      
+   TTT_s42                            fusion_core    todo      
+   TTT_s1337                          fusion_core    todo      
+   TTT_s2024                          fusion_core    todo      
+   DEM_only_s42                       solo           todo      
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  todo      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.3 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+
+[1/27] TRAIN Simple_s42  (fusion_core)
+
+[2/27] TRAIN Simple_s1337  (fusion_core)
+
+[3/27] TRAIN Simple_s2024  (fusion_core)
+
+[4/27] TRAIN SRA_s42  (fusion_core)
+
+[5/27] TRAIN SRA_s1337  (fusion_core)
+
+[6/27] TRAIN SRA_s2024  (fusion_core)
+
+[7/27] TRAIN TTT_s42  (fusion_core)
+
+[8/27] TRAIN TTT_s1337  (fusion_core)
+
+[9/27] TRAIN TTT_s2024  (fusion_core)
+!! train TTT_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 331, in train_epoch
+    for i, (ms, dem, dist_gt, mask, skeleton, _) in enumerate(pbar):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\tqdm\std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 741, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1548, in _next_data
+    return self._process_data(data, worker_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1586, in _process_data
+    data.reraise()
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_utils.py", line 784, in reraise
+    raise RuntimeError(msg) from None
+RuntimeError: Caught MemoryError in DataLoader worker process 2.
+Original Traceback (most recent call last):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\worker.py", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "B:\PhD\Classification\Codes\dataset.py", line 272, in __getitem__
+    ms_norm  = (ms  - stats['ms_mean'])  / (stats['ms_std']  + 1e-6)   # (C, H, W)
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 1.50 MiB for an array with shape (6, 256, 256) and data type float32
+
+
+
+[10/27] TRAIN DEM_only_s42  (solo)
+!! train DEM_only_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 331, in train_epoch
+    for i, (ms, dem, dist_gt, mask, skeleton, _) in enumerate(pbar):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\tqdm\std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 741, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1548, in _next_data
+    return self._process_data(data, worker_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1586, in _process_data
+    data.reraise()
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_utils.py", line 784, in reraise
+    raise RuntimeError(msg) from None
+RuntimeError: Caught MemoryError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\worker.py", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "B:\PhD\Classification\Codes\dataset.py", line 270, in __getitem__
+    ms  = self.jitter(ms)
+          ^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\dataset.py", line 117, in __call__
+    noise = np.random.normal(0.0, self.noise_std, ms.shape).astype(np.float32)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 1.50 MiB for an array with shape (6, 256, 256) and data type float32
+
+
+
+[11/27] TRAIN DEM_only_s1337  (solo)
+!! train DEM_only_s1337 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.25 GiB is free. Of the allocated memory 4.87 GiB is allocated by PyTorch, and 788.03 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[12/27] TRAIN DEM_only_s2024  (solo)
+!! train DEM_only_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 85, in soft_skeletonize
+    opened = soft_open(x)
+             ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 76, in soft_open
+    return soft_dilate(soft_erode(img))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 72, in soft_dilate
+    return F.max_pool2d(img, kernel_size=3, stride=1, padding=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.27 GiB is free. Of the allocated memory 4.84 GiB is allocated by PyTorch, and 800.03 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[13/27] TRAIN MS_only_s42  (solo)
+!! train MS_only_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 86, in soft_skeletonize
+    delta = F.relu(x - opened)
+            ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 1723, in relu
+    result = torch.relu(input)
+             ^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.28 GiB is free. Of the allocated memory 4.77 GiB is allocated by PyTorch, and 855.29 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[14/27] TRAIN MS_only_s1337  (solo)
+!! train MS_only_s1337 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 67, in soft_erode
+    p2 = -F.max_pool2d(-img, kernel_size=(1, 3), stride=1, padding=(0, 1))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.28 GiB is free. Of the allocated memory 4.76 GiB is allocated by PyTorch, and 861.29 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[15/27] TRAIN MS_only_s2024  (solo)
+!! train MS_only_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.27 GiB is free. Of the allocated memory 4.78 GiB is allocated by PyTorch, and 853.29 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[16/27] TRAIN Early_s42  (early_late)
+!! train Early_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 87, in soft_skeletonize
+    skel = skel + F.relu(delta - skel * delta)
+                         ~~~~~~^~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.30 GiB is free. Of the allocated memory 4.76 GiB is allocated by PyTorch, and 848.80 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[17/27] TRAIN Early_s1337  (early_late)
+!! train Early_s1337 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 85, in soft_skeletonize
+    opened = soft_open(x)
+             ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 76, in soft_open
+    return soft_dilate(soft_erode(img))
+                       ^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.30 GiB is free. Of the allocated memory 4.75 GiB is allocated by PyTorch, and 854.80 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[18/27] TRAIN Early_s2024  (early_late)
+!! train Early_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 206, in forward
+    m_cldice = self._cldice(merged_pred, merged_target, valid_mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.24 GiB is free. Of the allocated memory 4.87 GiB is allocated by PyTorch, and 798.80 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[19/27] TRAIN Late_s42  (early_late)
+!! train Late_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 67, in soft_erode
+    p2 = -F.max_pool2d(-img, kernel_size=(1, 3), stride=1, padding=(0, 1))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 14.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.15 GiB is free. Of the allocated memory 5.09 GiB is allocated by PyTorch, and 657.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[20/27] TRAIN Late_s1337  (early_late)
+!! train Late_s1337 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.21 GiB is free. Of the allocated memory 5.06 GiB is allocated by PyTorch, and 638.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[21/27] TRAIN Late_s2024  (early_late)
+!! train Late_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 14.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.19 GiB is free. Of the allocated memory 5.06 GiB is allocated by PyTorch, and 651.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[22/27] TRAIN TTT_abl-no_pu_s42  (loss_ablation)
+!! train TTT_abl-no_pu_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+                       ^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.17 GiB is free. Of the allocated memory 5.10 GiB is allocated by PyTorch, and 627.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[23/27] TRAIN TTT_abl-no_margin_s42  (loss_ablation)
+!! train TTT_abl-no_margin_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+                       ^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.17 GiB is free. Of the allocated memory 5.10 GiB is allocated by PyTorch, and 627.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[24/27] TRAIN TTT_abl-no_skeleton_boost_s42  (loss_ablation)
+!! train TTT_abl-no_skeleton_boost_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+                       ^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.17 GiB is free. Of the allocated memory 5.10 GiB is allocated by PyTorch, and 627.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[25/27] TRAIN TTT_abl-no_cldice_s42  (loss_ablation)
+
+[26/27] TRAIN TTT_abl-conventional_cldice_s42  (loss_ablation)
+!! train TTT_abl-conventional_cldice_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 85, in soft_skeletonize
+    opened = soft_open(x)
+             ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 76, in soft_open
+    return soft_dilate(soft_erode(img))
+                       ^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 67, in soft_erode
+    p2 = -F.max_pool2d(-img, kernel_size=(1, 3), stride=1, padding=(0, 1))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_jit_internal.py", line 636, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\functional.py", line 835, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 14.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.24 GiB is free. Of the allocated memory 5.05 GiB is allocated by PyTorch, and 615.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+
+[27/27] TRAIN TTT_abl-no_merge_loss_s42  (loss_ablation)
+!! train TTT_abl-no_merge_loss_s42 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 755, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 337, in train_epoch
+    loss, breakdown, logits, _, _, _ = run_step(ms, dem, dist_gt, mask, skeleton, model, loss_fn)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 318, in run_step
+    loss, breakdown = loss_fn(logits, dist_gt, valid, skeleton)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 196, in forward
+    cldice_loss = self._cldice(pred, target, valid_mask)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 190, in _cldice
+    return soft_cldice_loss(pred, target, iters=self.cldice_iters, mode=self.cldice_mode, valid=valid_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 115, in soft_cldice_loss
+    skel_pred = soft_skeletonize(pred, iters=iters)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 84, in soft_skeletonize
+    x = soft_erode(x)
+        ^^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\metrics.py", line 66, in soft_erode
+    p1 = -F.max_pool2d(-img, kernel_size=(3, 1), stride=1, padding=(1, 0))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 8.00 GiB of which 1.14 GiB is free. Of the allocated memory 5.13 GiB is allocated by PyTorch, and 633.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+[stage train] done in 20978.2 min
+
+##############################################################################
+#  STAGE: evaluate
+##############################################################################
+EVAL Simple_s42 / best_f1
+    macro F1=0.4379  merged F1=0.6274  clDice=0.5550  chamfer=24.895px (coverage 1.00)
+EVAL Simple_s42 / soup_greedy
+    macro F1=0.4416  merged F1=0.6310  clDice=0.5594  chamfer=25.203px (coverage 1.00)
+EVAL Simple_s42 / soup_uniform
+    macro F1=0.4357  merged F1=0.6246  clDice=0.5561  chamfer=25.957px (coverage 0.99)
+EVAL Simple_s1337 / best_f1
+    macro F1=0.4301  merged F1=0.6168  clDice=0.5464  chamfer=24.839px (coverage 0.99)
+EVAL Simple_s1337 / soup_greedy
+    macro F1=0.4431  merged F1=0.6342  clDice=0.5641  chamfer=24.683px (coverage 1.00)
+EVAL Simple_s1337 / soup_uniform
+    macro F1=0.4326  merged F1=0.6187  clDice=0.5461  chamfer=25.556px (coverage 0.99)
+EVAL Simple_s2024 / best_f1
+    macro F1=0.4371  merged F1=0.6319  clDice=0.5627  chamfer=24.450px (coverage 1.00)
+EVAL Simple_s2024 / soup_greedy
+    macro F1=0.4458  merged F1=0.6418  clDice=0.5676  chamfer=24.005px (coverage 1.00)
+EVAL Simple_s2024 / soup_uniform
+    macro F1=0.4394  merged F1=0.6268  clDice=0.5558  chamfer=25.740px (coverage 0.99)
+EVAL SRA_s42 / best_f1
+    macro F1=0.4360  merged F1=0.6256  clDice=0.5529  chamfer=24.922px (coverage 1.00)
+EVAL SRA_s42 / soup_greedy
+    macro F1=0.4381  merged F1=0.6235  clDice=0.5501  chamfer=25.122px (coverage 0.99)
+EVAL SRA_s42 / soup_uniform
+    macro F1=0.4234  merged F1=0.6110  clDice=0.5348  chamfer=26.764px (coverage 0.98)
+EVAL SRA_s1337 / best_f1
+    macro F1=0.4323  merged F1=0.6248  clDice=0.5505  chamfer=25.847px (coverage 0.99)
+EVAL SRA_s1337 / soup_greedy
+    macro F1=0.4322  merged F1=0.6232  clDice=0.5492  chamfer=25.825px (coverage 0.99)
+EVAL SRA_s1337 / soup_uniform
+    macro F1=0.4267  merged F1=0.6159  clDice=0.5395  chamfer=25.096px (coverage 0.98)
+EVAL SRA_s2024 / best_f1
+    macro F1=0.4274  merged F1=0.6107  clDice=0.5311  chamfer=25.545px (coverage 0.99)
+EVAL SRA_s2024 / soup_greedy
+    macro F1=0.4442  merged F1=0.6306  clDice=0.5585  chamfer=23.628px (coverage 0.99)
+EVAL SRA_s2024 / soup_uniform
+    macro F1=0.4343  merged F1=0.6197  clDice=0.5475  chamfer=24.584px (coverage 0.98)
+EVAL TTT_s42 / best_f1
+    macro F1=0.4505  merged F1=0.6296  clDice=0.5554  chamfer=24.619px (coverage 0.99)
+EVAL TTT_s42 / soup_greedy
+    macro F1=0.4533  merged F1=0.6273  clDice=0.5559  chamfer=24.603px (coverage 0.99)
+EVAL TTT_s42 / soup_uniform
+    macro F1=0.4479  merged F1=0.6264  clDice=0.5531  chamfer=25.449px (coverage 0.99)
+EVAL TTT_s1337 / best_f1
+    macro F1=0.4404  merged F1=0.6244  clDice=0.5577  chamfer=23.313px (coverage 0.99)
+EVAL TTT_s1337 / soup_greedy
+    macro F1=0.4541  merged F1=0.6371  clDice=0.5724  chamfer=24.404px (coverage 0.99)
+EVAL TTT_s1337 / soup_uniform
+    macro F1=0.4486  merged F1=0.6301  clDice=0.5614  chamfer=25.792px (coverage 0.99)
+skip eval TTT_s2024: not trained
+skip eval DEM_only_s42: not trained
+skip eval DEM_only_s1337: not trained
+skip eval DEM_only_s2024: not trained
+skip eval MS_only_s42: not trained
+skip eval MS_only_s1337: not trained
+skip eval MS_only_s2024: not trained
+skip eval Early_s42: not trained
+skip eval Early_s1337: not trained
+skip eval Early_s2024: not trained
+skip eval Late_s42: not trained
+skip eval Late_s1337: not trained
+skip eval Late_s2024: not trained
+skip eval TTT_abl-no_pu_s42: not trained
+skip eval TTT_abl-no_margin_s42: not trained
+skip eval TTT_abl-no_skeleton_boost_s42: not trained
+EVAL TTT_abl-no_cldice_s42 / best_f1
+    macro F1=0.3580  merged F1=0.5768  clDice=0.4516  chamfer=22.100px (coverage 0.87)
+EVAL TTT_abl-no_cldice_s42 / soup_greedy
+    macro F1=0.3604  merged F1=0.5777  clDice=0.4563  chamfer=23.942px (coverage 0.87)
+EVAL TTT_abl-no_cldice_s42 / soup_uniform
+    macro F1=0.3473  merged F1=0.5740  clDice=0.4599  chamfer=23.599px (coverage 0.87)
+skip eval TTT_abl-conventional_cldice_s42: not trained
+skip eval TTT_abl-no_merge_loss_s42: not trained
+[stage evaluate] done in 149.5 min
+
+##############################################################################
+#  STAGE: perturb
+##############################################################################
+PERTURB Simple_s42
+PERTURB Simple_s1337
+PERTURB Simple_s2024
+PERTURB SRA_s42
+PERTURB SRA_s1337
+PERTURB SRA_s2024
+PERTURB TTT_s42
+PERTURB TTT_s1337
+[stage perturb] done in 36.0 min
+
+##############################################################################
+#  STAGE: probe
+##############################################################################
+PROBE TTT_s42
+PROBE TTT_s1337
+[stage probe] done in 0.9 min
+
+##############################################################################
+#  STAGE: ceiling
+##############################################################################
+ceiling (perfect model vs noisy labels): {"exact": 0.32, "within_one": 0.63, "class_mae": 1.293, "qwk": 0.604, "macro_f1_class": 0.306}
+[stage ceiling] done in 0.0 min
+
+##############################################################################
+#  STAGE: complexity
+##############################################################################
+ variant  params_M  encoder_params_M  non_encoder_params_M  gflops_per_patch  latency_ms_per_patch  sec_per_km2
+  Simple     90.75             88.15                  2.60             51.84                 36.53         0.99
+     SRA     92.96             88.15                  4.82             52.64                 37.86         1.03
+     TTT     91.34             88.15                  3.20             53.41                 43.28         1.17
+   Early     44.35             44.08                  0.26             34.86                 17.58         0.48
+    Late     88.68             88.15                  0.53             69.54                 45.80         1.24
+DEM_only     44.33             44.07                  0.26             34.70                 17.33         0.47
+ MS_only     44.35             44.08                  0.26             34.83                 17.80         0.48
+[stage complexity] done in 0.2 min
+
+##############################################################################
+#  STAGE: estimators
+##############################################################################
+ESTIMATORS Simple_s42
+    L_kulpa: 121.08 km raw (-4.0%), calibrated 121.66 km (-3.5%) vs reference 126.08 km
+    L_coarea: 129.37 km raw (+2.6%), calibrated 122.54 km (-2.8%) vs reference 126.08 km
+ESTIMATORS Simple_s1337
+    L_kulpa: 116.55 km raw (-7.6%), calibrated 119.39 km (-5.3%) vs reference 126.08 km
+    L_coarea: 125.34 km raw (-0.6%), calibrated 120.52 km (-4.4%) vs reference 126.08 km
+ESTIMATORS Simple_s2024
+    L_kulpa: 126.37 km raw (+0.2%), calibrated 122.74 km (-2.7%) vs reference 126.08 km
+    L_coarea: 128.85 km raw (+2.2%), calibrated 122.85 km (-2.6%) vs reference 126.08 km
+ESTIMATORS SRA_s42
+    L_kulpa: 115.86 km raw (-8.1%), calibrated 120.84 km (-4.2%) vs reference 126.08 km
+    L_coarea: 124.81 km raw (-1.0%), calibrated 121.84 km (-3.4%) vs reference 126.08 km
+ESTIMATORS SRA_s1337
+    L_kulpa: 114.28 km raw (-9.4%), calibrated 120.64 km (-4.3%) vs reference 126.08 km
+    L_coarea: 122.84 km raw (-2.6%), calibrated 121.75 km (-3.4%) vs reference 126.08 km
+ESTIMATORS SRA_s2024
+    L_kulpa: 105.73 km raw (-16.1%), calibrated 121.99 km (-3.2%) vs reference 126.08 km
+    L_coarea: 111.53 km raw (-11.5%), calibrated 122.40 km (-2.9%) vs reference 126.08 km
+ESTIMATORS TTT_s42
+    L_kulpa: 120.86 km raw (-4.1%), calibrated 121.19 km (-3.9%) vs reference 126.08 km
+    L_coarea: 123.28 km raw (-2.2%), calibrated 121.95 km (-3.3%) vs reference 126.08 km
+ESTIMATORS TTT_s1337
+    L_kulpa: 116.69 km raw (-7.4%), calibrated 120.92 km (-4.1%) vs reference 126.08 km
+    L_coarea: 120.31 km raw (-4.6%), calibrated 121.60 km (-3.6%) vs reference 126.08 km
+[stage estimators] done in 11.4 min
+
+##############################################################################
+#  STAGE: stats
+##############################################################################
+  A      B                   target          seed   n  mean_a  mean_b  mean_diff   ci_lo   ci_hi  wilcoxon_p  cliffs_delta  rank_biserial
+TTT Simple       merged__relaxed_f1            42 650  0.5016  0.4981     0.0035 -0.0044  0.0116      0.4472        0.0073         0.0379
+TTT Simple       merged__relaxed_f1          1337 638  0.5024  0.4980     0.0044 -0.0057  0.0145      0.5102        0.0085         0.0327
+TTT Simple       merged__relaxed_f1 mean_of_seeds 653  0.4951  0.4912     0.0039 -0.0026  0.0105      0.4324        0.0070         0.0388
+TTT Simple           merged__cldice            42 650  0.4226  0.4197     0.0029 -0.0066  0.0128      0.7216        0.0055         0.0183
+TTT Simple           merged__cldice          1337 638  0.4277  0.4219     0.0058 -0.0051  0.0166      0.3744        0.0133         0.0453
+TTT Simple           merged__cldice mean_of_seeds 653  0.4192  0.4150     0.0043 -0.0029  0.0115      0.2205        0.0086         0.0617
+TTT Simple merged__chamfer_distance            42 554 24.6187 24.2006     0.4181 -1.1050  1.9876      0.3698       -0.0124        -0.0440
+TTT Simple merged__chamfer_distance          1337 549 22.7066 24.3680    -1.6614 -3.6112  0.2627      0.0137       -0.0373        -0.1215
+TTT Simple merged__chamfer_distance mean_of_seeds 556 24.4136 25.1247    -0.7111 -1.9324  0.5104      0.0034       -0.0239        -0.1436
+TTT    SRA       merged__relaxed_f1            42 645  0.5054  0.5003     0.0052 -0.0032  0.0137      0.0315        0.0094         0.1073
+TTT    SRA       merged__relaxed_f1          1337 636  0.5040  0.5019     0.0021 -0.0072  0.0116      0.6278        0.0047        -0.0242
+TTT    SRA       merged__relaxed_f1 mean_of_seeds 653  0.4951  0.4915     0.0036 -0.0024  0.0096      0.2169        0.0088         0.0612
+TTT    SRA           merged__cldice            42 645  0.4258  0.4235     0.0024 -0.0075  0.0121      0.2810        0.0047         0.0550
+TTT    SRA           merged__cldice          1337 636  0.4290  0.4274     0.0016 -0.0087  0.0118      0.8227        0.0044         0.0114
+TTT    SRA           merged__cldice mean_of_seeds 653  0.4192  0.4173     0.0020 -0.0049  0.0088      0.4661        0.0033         0.0367
+TTT    SRA merged__chamfer_distance            42 553 24.6532 24.1945     0.4587 -1.2419  2.2507      0.0569        0.0037        -0.0935
+TTT    SRA merged__chamfer_distance          1337 551 23.3496 25.5680    -2.2184 -4.0311 -0.4762      0.0466       -0.0067        -0.0979
+TTT    SRA merged__chamfer_distance mean_of_seeds 556 24.4136 25.3610    -0.9474 -2.2412  0.3213      0.1122       -0.0037        -0.0777
+SRA Simple       merged__relaxed_f1            42 648  0.4980  0.4996    -0.0016 -0.0105  0.0072      0.2287       -0.0024        -0.0600
+SRA Simple       merged__relaxed_f1          1337 641  0.4980  0.4957     0.0023 -0.0073  0.0121      0.2159        0.0042         0.0618
+SRA Simple       merged__relaxed_f1          2024 645  0.4816  0.5087    -0.0271 -0.0372 -0.0171      0.0000       -0.0488        -0.2876
+SRA Simple       merged__relaxed_f1 mean_of_seeds 662  0.4796  0.4882    -0.0086 -0.0143 -0.0029      0.0000       -0.0165        -0.2068
+SRA Simple           merged__cldice            42 648  0.4215  0.4210     0.0005 -0.0097  0.0106      0.9908        0.0001         0.0006
+SRA Simple           merged__cldice          1337 641  0.4241  0.4199     0.0041 -0.0063  0.0147      0.3710        0.0085         0.0457
+SRA Simple           merged__cldice          2024 645  0.4018  0.4356    -0.0338 -0.0441 -0.0240      0.0000       -0.0566        -0.3504
+SRA Simple           merged__cldice mean_of_seeds 662  0.4049  0.4144    -0.0095 -0.0155 -0.0034      0.0001       -0.0133        -0.1931
+SRA Simple merged__chamfer_distance            42 556 24.9224 24.9279    -0.0055 -1.5955  1.6299      0.8514       -0.0152         0.0092
+SRA Simple merged__chamfer_distance          1337 551 25.0631 24.8766     0.1865 -1.5616  1.9904      0.1062       -0.0318        -0.0794
+SRA Simple merged__chamfer_distance          2024 553 25.1125 23.7316     1.3809 -1.0767  3.7827      0.0004        0.0440         0.1750
+SRA Simple merged__chamfer_distance mean_of_seeds 557 26.0534 25.3987     0.6547 -0.5367  1.8499      0.0925        0.0032         0.0823
+[stage stats] done in 0.1 min
+
+##############################################################################
+#  STAGE: report
+##############################################################################
+report written to experiments\report
+[stage report] done in 0.0 min
+
+ALL DONE in 352.94 h.  Failed jobs: ['train TTT_s2024', 'train DEM_only_s42', 'train DEM_only_s1337', 'train DEM_only_s2024', 'train MS_only_s42', 'train MS_only_s1337', 'train MS_only_s2024', 'train Early_s42', 'train Early_s1337', 'train Early_s2024', 'train Late_s42', 'train Late_s1337', 'train Late_s2024', 'train TTT_abl-no_pu_s42', 'train TTT_abl-no_margin_s42', 'train TTT_abl-no_skeleton_boost_s42', 'train TTT_abl-conventional_cldice_s42', 'train TTT_abl-no_merge_loss_s42']

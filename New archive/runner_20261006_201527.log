@@ -1,0 +1,119 @@
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    done      
+   Simple_s1337                       fusion_core    done      
+   Simple_s2024                       fusion_core    done      
+   SRA_s42                            fusion_core    done      
+   SRA_s1337                          fusion_core    done      
+   SRA_s2024                          fusion_core    done      
+   TTT_s42                            fusion_core    done      
+   TTT_s1337                          fusion_core    done      
+   TTT_s2024                          fusion_core    resumable 
+   DEM_only_s42                       solo           resumable 
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  done      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.3 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+[1/27] Simple_s42: already done
+[2/27] Simple_s1337: already done
+[3/27] Simple_s2024: already done
+[4/27] SRA_s42: already done
+[5/27] SRA_s1337: already done
+[6/27] SRA_s2024: already done
+[7/27] TTT_s42: already done
+[8/27] TTT_s1337: already done
+
+[9/27] TRAIN TTT_s2024  (fusion_core)
+!! train TTT_s2024 FAILED:
+Traceback (most recent call last):
+  File "B:\PhD\Classification\Codes\run_all.py", line 203, in safe
+    return fn(*a, **kw)
+           ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 758, in train_run
+    train_loss, train_bd, train_time, train_samples, n_skipped = train_epoch(
+                                                                 ^^^^^^^^^^^^
+  File "B:\PhD\Classification\Codes\main.py", line 334, in train_epoch
+    for i, (ms, dem, dist_gt, mask, skeleton, _) in enumerate(pbar):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\tqdm\std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 741, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1548, in _next_data
+    return self._process_data(data, worker_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\dataloader.py", line 1586, in _process_data
+    data.reraise()
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\_utils.py", line 784, in reraise
+    raise RuntimeError(msg) from None
+RuntimeError: Caught MemoryError in DataLoader worker process 1.
+Original Traceback (most recent call last):
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\worker.py", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\torch\utils\data\_utils\fetch.py", line 54, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "B:\PhD\Classification\Codes\dataset.py", line 283, in __getitem__
+    dist_norm = np.clip(dist_stack / dist_cap, 0.0, 1.0)   # (N, H, W)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\numpy\core\fromnumeric.py", line 2169, in clip
+    return _wrapfunc(a, 'clip', a_min, a_max, out=out, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\numpy\core\fromnumeric.py", line 59, in _wrapfunc
+    return bound(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mehra\.conda\envs\Mehran_PhD\Lib\site-packages\numpy\core\_methods.py", line 99, in _clip
+    return um.clip(a, min, max, out=out, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 1.75 MiB for an array with shape (7, 256, 256) and data type float32
+
+
+
+[10/27] TRAIN DEM_only_s42  (solo)

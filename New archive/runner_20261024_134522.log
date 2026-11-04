@@ -1,0 +1,344 @@
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    done      
+   Simple_s1337                       fusion_core    done      
+   Simple_s2024                       fusion_core    done      
+   SRA_s42                            fusion_core    done      
+   SRA_s1337                          fusion_core    done      
+   SRA_s2024                          fusion_core    done      
+   TTT_s42                            fusion_core    done      
+   TTT_s1337                          fusion_core    done      
+   TTT_s2024                          fusion_core    done      
+   DEM_only_s42                       solo           done      
+   DEM_only_s1337                     solo           done      
+   DEM_only_s2024                     solo           done      
+   MS_only_s42                        solo           done      
+   MS_only_s1337                      solo           done      
+   MS_only_s2024                      solo           done      
+   Early_s42                          early_late     done      
+   Early_s1337                        early_late     done      
+   Early_s2024                        early_late     done      
+   Late_s42                           early_late     done      
+   Late_s1337                         early_late     done      
+   Late_s2024                         early_late     done      
+   TTT_abl-no_pu_s42                  loss_ablation  done      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  resumable {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  done      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.3 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+[1/27] Simple_s42: already done
+[2/27] Simple_s1337: already done
+[3/27] Simple_s2024: already done
+[4/27] SRA_s42: already done
+[5/27] SRA_s1337: already done
+[6/27] SRA_s2024: already done
+[7/27] TTT_s42: already done
+[8/27] TTT_s1337: already done
+[9/27] TTT_s2024: already done
+[10/27] DEM_only_s42: already done
+[11/27] DEM_only_s1337: already done
+[12/27] DEM_only_s2024: already done
+[13/27] MS_only_s42: already done
+[14/27] MS_only_s1337: already done
+[15/27] MS_only_s2024: already done
+[16/27] Early_s42: already done
+[17/27] Early_s1337: already done
+[18/27] Early_s2024: already done
+[19/27] Late_s42: already done
+[20/27] Late_s1337: already done
+[21/27] Late_s2024: already done
+[22/27] TTT_abl-no_pu_s42: already done
+
+[23/27] TRAIN TTT_abl-no_margin_s42  (loss_ablation)
+
+[24/27] TRAIN TTT_abl-no_skeleton_boost_s42  (loss_ablation)
+[25/27] TTT_abl-no_cldice_s42: already done
+
+[26/27] TRAIN TTT_abl-conventional_cldice_s42  (loss_ablation)
+
+[27/27] TRAIN TTT_abl-no_merge_loss_s42  (loss_ablation)
+[stage train] done in 12124.2 min
+
+##############################################################################
+#  STAGE: evaluate
+##############################################################################
+EVAL TTT_s2024 / best_f1
+    macro F1=0.4467  merged F1=0.6230  clDice=0.5491  chamfer=25.589px (coverage 1.00)
+EVAL TTT_s2024 / soup_greedy
+    macro F1=0.4541  merged F1=0.6332  clDice=0.5563  chamfer=24.831px (coverage 1.00)
+EVAL TTT_s2024 / soup_uniform
+    macro F1=0.4437  merged F1=0.6239  clDice=0.5465  chamfer=25.624px (coverage 0.98)
+EVAL DEM_only_s42 / best_f1
+    macro F1=0.4385  merged F1=0.6163  clDice=0.5570  chamfer=26.529px (coverage 1.00)
+EVAL DEM_only_s42 / soup_greedy
+    macro F1=0.4427  merged F1=0.6152  clDice=0.5530  chamfer=26.587px (coverage 1.00)
+EVAL DEM_only_s42 / soup_uniform
+    macro F1=0.4383  merged F1=0.6129  clDice=0.5498  chamfer=27.369px (coverage 0.99)
+EVAL DEM_only_s1337 / best_f1
+    macro F1=0.4497  merged F1=0.6363  clDice=0.5761  chamfer=24.326px (coverage 1.00)
+EVAL DEM_only_s1337 / soup_greedy
+    macro F1=0.4483  merged F1=0.6326  clDice=0.5749  chamfer=25.550px (coverage 1.00)
+EVAL DEM_only_s1337 / soup_uniform
+    macro F1=0.4111  merged F1=0.6203  clDice=0.5553  chamfer=26.277px (coverage 0.99)
+EVAL DEM_only_s2024 / best_f1
+    macro F1=0.4444  merged F1=0.6147  clDice=0.5509  chamfer=28.005px (coverage 1.00)
+EVAL DEM_only_s2024 / soup_greedy
+    macro F1=0.4552  merged F1=0.6269  clDice=0.5661  chamfer=28.541px (coverage 0.99)
+EVAL DEM_only_s2024 / soup_uniform
+    macro F1=0.4464  merged F1=0.6223  clDice=0.5631  chamfer=27.753px (coverage 0.98)
+EVAL MS_only_s42 / best_f1
+    macro F1=0.2794  merged F1=0.5791  clDice=0.5215  chamfer=29.820px (coverage 1.00)
+EVAL MS_only_s42 / soup_greedy
+    macro F1=0.2856  merged F1=0.5875  clDice=0.5312  chamfer=29.327px (coverage 0.99)
+EVAL MS_only_s42 / soup_uniform
+    macro F1=0.2773  merged F1=0.5807  clDice=0.5221  chamfer=30.033px (coverage 0.97)
+EVAL MS_only_s1337 / best_f1
+    macro F1=0.2845  merged F1=0.5912  clDice=0.5268  chamfer=28.950px (coverage 1.00)
+EVAL MS_only_s1337 / soup_greedy
+    macro F1=0.2896  merged F1=0.5876  clDice=0.5227  chamfer=29.274px (coverage 0.97)
+EVAL MS_only_s1337 / soup_uniform
+    macro F1=0.2841  merged F1=0.5841  clDice=0.5192  chamfer=29.222px (coverage 0.96)
+EVAL MS_only_s2024 / best_f1
+    macro F1=0.2837  merged F1=0.5840  clDice=0.5215  chamfer=28.766px (coverage 1.00)
+EVAL MS_only_s2024 / soup_greedy
+    macro F1=0.2871  merged F1=0.5839  clDice=0.5223  chamfer=30.813px (coverage 0.99)
+EVAL MS_only_s2024 / soup_uniform
+    macro F1=0.2803  merged F1=0.5774  clDice=0.5163  chamfer=30.915px (coverage 0.97)
+EVAL Early_s42 / best_f1
+    macro F1=0.4025  merged F1=0.6110  clDice=0.5520  chamfer=28.020px (coverage 1.00)
+EVAL Early_s42 / soup_greedy
+    macro F1=0.4064  merged F1=0.6246  clDice=0.5646  chamfer=27.463px (coverage 1.00)
+EVAL Early_s42 / soup_uniform
+    macro F1=0.4038  merged F1=0.6160  clDice=0.5586  chamfer=28.153px (coverage 0.98)
+EVAL Early_s1337 / best_f1
+    macro F1=0.4077  merged F1=0.6251  clDice=0.5621  chamfer=26.019px (coverage 0.99)
+EVAL Early_s1337 / soup_greedy
+    macro F1=0.4117  merged F1=0.6254  clDice=0.5669  chamfer=25.922px (coverage 0.99)
+EVAL Early_s1337 / soup_uniform
+    macro F1=0.4066  merged F1=0.6207  clDice=0.5594  chamfer=24.095px (coverage 0.97)
+EVAL Early_s2024 / best_f1
+    macro F1=0.4044  merged F1=0.6228  clDice=0.5619  chamfer=26.528px (coverage 1.00)
+EVAL Early_s2024 / soup_greedy
+    macro F1=0.4102  merged F1=0.6209  clDice=0.5645  chamfer=26.890px (coverage 0.99)
+EVAL Early_s2024 / soup_uniform
+    macro F1=0.4066  merged F1=0.6197  clDice=0.5626  chamfer=25.990px (coverage 0.98)
+EVAL Late_s42 / best_f1
+    macro F1=0.4454  merged F1=0.6282  clDice=0.5637  chamfer=27.045px (coverage 1.00)
+EVAL Late_s42 / soup_greedy
+    macro F1=0.4459  merged F1=0.6195  clDice=0.5579  chamfer=27.828px (coverage 0.99)
+EVAL Late_s42 / soup_uniform
+    macro F1=0.4413  merged F1=0.6256  clDice=0.5641  chamfer=27.687px (coverage 0.99)
+EVAL Late_s1337 / best_f1
+    macro F1=0.4378  merged F1=0.6167  clDice=0.5476  chamfer=26.282px (coverage 1.00)
+EVAL Late_s1337 / soup_greedy
+    macro F1=0.4301  merged F1=0.6054  clDice=0.5332  chamfer=26.269px (coverage 0.99)
+EVAL Late_s1337 / soup_uniform
+    macro F1=0.4393  merged F1=0.6188  clDice=0.5517  chamfer=25.749px (coverage 0.99)
+EVAL Late_s2024 / best_f1
+    macro F1=0.4381  merged F1=0.6220  clDice=0.5509  chamfer=25.883px (coverage 0.99)
+EVAL Late_s2024 / soup_greedy
+    macro F1=0.4381  merged F1=0.6220  clDice=0.5509  chamfer=25.883px (coverage 0.99)
+EVAL Late_s2024 / soup_uniform
+    macro F1=0.4445  merged F1=0.6289  clDice=0.5555  chamfer=25.388px (coverage 0.99)
+EVAL TTT_abl-no_pu_s42 / best_f1
+    macro F1=0.4489  merged F1=0.6305  clDice=0.5548  chamfer=24.941px (coverage 1.00)
+EVAL TTT_abl-no_pu_s42 / soup_greedy
+    macro F1=0.4472  merged F1=0.6261  clDice=0.5542  chamfer=25.129px (coverage 0.99)
+EVAL TTT_abl-no_pu_s42 / soup_uniform
+    macro F1=0.4462  merged F1=0.6263  clDice=0.5563  chamfer=25.442px (coverage 0.99)
+EVAL TTT_abl-no_margin_s42 / best_f1
+    macro F1=0.4425  merged F1=0.6204  clDice=0.5486  chamfer=25.507px (coverage 0.99)
+EVAL TTT_abl-no_margin_s42 / soup_greedy
+    macro F1=0.4485  merged F1=0.6296  clDice=0.5525  chamfer=24.006px (coverage 1.00)
+EVAL TTT_abl-no_margin_s42 / soup_uniform
+    macro F1=0.4434  merged F1=0.6279  clDice=0.5504  chamfer=24.062px (coverage 0.99)
+EVAL TTT_abl-no_skeleton_boost_s42 / best_f1
+    macro F1=0.4389  merged F1=0.6260  clDice=0.5534  chamfer=25.651px (coverage 1.00)
+EVAL TTT_abl-no_skeleton_boost_s42 / soup_greedy
+    macro F1=0.4435  merged F1=0.6384  clDice=0.5623  chamfer=24.381px (coverage 1.00)
+EVAL TTT_abl-no_skeleton_boost_s42 / soup_uniform
+    macro F1=0.4455  merged F1=0.6271  clDice=0.5505  chamfer=24.754px (coverage 0.97)
+EVAL TTT_abl-conventional_cldice_s42 / best_f1
+    macro F1=0.3721  merged F1=0.6137  clDice=0.5293  chamfer=26.256px (coverage 1.00)
+EVAL TTT_abl-conventional_cldice_s42 / soup_greedy
+    macro F1=0.3721  merged F1=0.6137  clDice=0.5293  chamfer=26.256px (coverage 1.00)
+EVAL TTT_abl-conventional_cldice_s42 / soup_uniform
+    macro F1=0.0015  merged F1=0.0169  clDice=0.0529  chamfer=48.734px (coverage 1.00)
+EVAL TTT_abl-no_merge_loss_s42 / best_f1
+    macro F1=0.4465  merged F1=0.6183  clDice=0.5452  chamfer=21.911px (coverage 1.00)
+EVAL TTT_abl-no_merge_loss_s42 / soup_greedy
+    macro F1=0.4507  merged F1=0.6214  clDice=0.5550  chamfer=22.171px (coverage 1.00)
+EVAL TTT_abl-no_merge_loss_s42 / soup_uniform
+    macro F1=0.4383  merged F1=0.6148  clDice=0.5491  chamfer=23.743px (coverage 1.00)
+[stage evaluate] done in 282.2 min
+
+##############################################################################
+#  STAGE: perturb
+##############################################################################
+PERTURB TTT_s2024
+PERTURB Late_s42
+PERTURB Late_s1337
+PERTURB Late_s2024
+[stage perturb] done in 11.6 min
+
+##############################################################################
+#  STAGE: probe
+##############################################################################
+PROBE TTT_s2024
+[stage probe] done in 0.3 min
+
+##############################################################################
+#  STAGE: ceiling
+##############################################################################
+ceiling (perfect model vs noisy labels): {"exact": 0.32, "within_one": 0.63, "class_mae": 1.293, "qwk": 0.604, "macro_f1_class": 0.306}
+[stage ceiling] done in 0.0 min
+
+##############################################################################
+#  STAGE: complexity
+##############################################################################
+ variant  params_M  encoder_params_M  non_encoder_params_M  gflops_per_patch  latency_ms_per_patch  sec_per_km2
+  Simple     90.75             88.15                  2.60             51.84                 37.61         1.02
+     SRA     92.96             88.15                  4.82             52.64                 39.08         1.06
+     TTT     91.34             88.15                  3.20             53.41                 44.77         1.21
+   Early     44.35             44.08                  0.26             34.86                 19.33         0.52
+    Late     88.68             88.15                  0.53             69.54                 36.92         1.00
+DEM_only     44.33             44.07                  0.26             34.70                 17.49         0.47
+ MS_only     44.35             44.08                  0.26             34.83                 17.18         0.47
+[stage complexity] done in 0.2 min
+
+##############################################################################
+#  STAGE: estimators
+##############################################################################
+ESTIMATORS TTT_s2024
+    L_kulpa: 112.26 km raw (-11.0%), calibrated 119.80 km (-5.0%) vs reference 126.08 km
+    L_coarea: 122.74 km raw (-2.7%), calibrated 120.61 km (-4.3%) vs reference 126.08 km
+[stage estimators] done in 1.2 min
+
+##############################################################################
+#  STAGE: stats
+##############################################################################
+  A        B                   target          seed   n  mean_a  mean_b  mean_diff   ci_lo   ci_hi  wilcoxon_p  cliffs_delta  rank_biserial
+TTT   Simple       merged__relaxed_f1            42 650  0.5016  0.4981     0.0035 -0.0044  0.0116      0.4472        0.0073         0.0379
+TTT   Simple       merged__relaxed_f1          1337 638  0.5024  0.4980     0.0044 -0.0057  0.0145      0.5102        0.0085         0.0327
+TTT   Simple       merged__relaxed_f1          2024 646  0.4908  0.5079    -0.0171 -0.0272 -0.0074      0.0005       -0.0325        -0.1724
+TTT   Simple       merged__relaxed_f1 mean_of_seeds 658  0.4882  0.4912    -0.0030 -0.0083  0.0020      0.1312       -0.0055        -0.0742
+TTT   Simple           merged__cldice            42 650  0.4226  0.4197     0.0029 -0.0066  0.0128      0.7216        0.0055         0.0183
+TTT   Simple           merged__cldice          1337 638  0.4277  0.4219     0.0058 -0.0051  0.0166      0.3744        0.0133         0.0453
+TTT   Simple           merged__cldice          2024 646  0.4120  0.4349    -0.0230 -0.0333 -0.0127      0.0000       -0.0396        -0.2323
+TTT   Simple           merged__cldice mean_of_seeds 658  0.4122  0.4169    -0.0047 -0.0105  0.0008      0.0637       -0.0059        -0.0929
+TTT   Simple merged__chamfer_distance            42 554 24.6187 24.2006     0.4181 -1.1050  1.9876      0.3698       -0.0124        -0.0440
+TTT   Simple merged__chamfer_distance          1337 549 22.7066 24.3680    -1.6614 -3.6112  0.2627      0.0137       -0.0373        -0.1215
+TTT   Simple merged__chamfer_distance          2024 554 25.2018 24.1184     1.0835 -0.7894  2.9117      0.0192        0.0458         0.1148
+TTT   Simple merged__chamfer_distance mean_of_seeds 557 24.8356 25.3987    -0.5631 -1.9684  0.6206      0.6943        0.0005        -0.0192
+TTT      SRA       merged__relaxed_f1            42 645  0.5054  0.5003     0.0052 -0.0032  0.0137      0.0315        0.0094         0.1073
+TTT      SRA       merged__relaxed_f1          1337 636  0.5040  0.5019     0.0021 -0.0072  0.0116      0.6278        0.0047        -0.0242
+TTT      SRA       merged__relaxed_f1          2024 639  0.4962  0.4861     0.0100 -0.0007  0.0204      0.0107        0.0174         0.1269
+TTT      SRA       merged__relaxed_f1 mean_of_seeds 658  0.4882  0.4825     0.0056  0.0005  0.0108      0.0026        0.0121         0.1478
+TTT      SRA           merged__cldice            42 645  0.4258  0.4235     0.0024 -0.0075  0.0121      0.2810        0.0047         0.0550
+TTT      SRA           merged__cldice          1337 636  0.4290  0.4274     0.0016 -0.0087  0.0118      0.8227        0.0044         0.0114
+TTT      SRA           merged__cldice          2024 639  0.4165  0.4055     0.0109  0.0001  0.0214      0.0088        0.0172         0.1334
+TTT      SRA           merged__cldice mean_of_seeds 658  0.4122  0.4073     0.0048 -0.0010  0.0107      0.0178        0.0074         0.1182
+TTT      SRA merged__chamfer_distance            42 553 24.6532 24.1945     0.4587 -1.2419  2.2507      0.0569        0.0037        -0.0935
+TTT      SRA merged__chamfer_distance          1337 551 23.3496 25.5680    -2.2184 -4.0311 -0.4762      0.0466       -0.0067        -0.0979
+TTT      SRA merged__chamfer_distance          2024 553 24.9414 25.5597    -0.6183 -2.8032  1.4696      0.5667        0.0031        -0.0281
+TTT      SRA merged__chamfer_distance mean_of_seeds 557 24.8356 26.0534    -1.2178 -2.7076  0.0367      0.0677       -0.0026        -0.0893
+SRA   Simple       merged__relaxed_f1            42 648  0.4980  0.4996    -0.0016 -0.0105  0.0072      0.2287       -0.0024        -0.0600
+SRA   Simple       merged__relaxed_f1          1337 641  0.4980  0.4957     0.0023 -0.0073  0.0121      0.2159        0.0042         0.0618
+SRA   Simple       merged__relaxed_f1          2024 645  0.4816  0.5087    -0.0271 -0.0372 -0.0171      0.0000       -0.0488        -0.2876
+SRA   Simple       merged__relaxed_f1 mean_of_seeds 662  0.4796  0.4882    -0.0086 -0.0143 -0.0029      0.0000       -0.0165        -0.2068
+SRA   Simple           merged__cldice            42 648  0.4215  0.4210     0.0005 -0.0097  0.0106      0.9908        0.0001         0.0006
+SRA   Simple           merged__cldice          1337 641  0.4241  0.4199     0.0041 -0.0063  0.0147      0.3710        0.0085         0.0457
+SRA   Simple           merged__cldice          2024 645  0.4018  0.4356    -0.0338 -0.0441 -0.0240      0.0000       -0.0566        -0.3504
+SRA   Simple           merged__cldice mean_of_seeds 662  0.4049  0.4144    -0.0095 -0.0155 -0.0034      0.0001       -0.0133        -0.1931
+SRA   Simple merged__chamfer_distance            42 556 24.9224 24.9279    -0.0055 -1.5955  1.6299      0.8514       -0.0152         0.0092
+SRA   Simple merged__chamfer_distance          1337 551 25.0631 24.8766     0.1865 -1.5616  1.9904      0.1062       -0.0318        -0.0794
+SRA   Simple merged__chamfer_distance          2024 553 25.1125 23.7316     1.3809 -1.0767  3.7827      0.0004        0.0440         0.1750
+SRA   Simple merged__chamfer_distance mean_of_seeds 557 26.0534 25.3987     0.6547 -0.5367  1.8499      0.0925        0.0032         0.0823
+TTT    Early       merged__relaxed_f1            42 636  0.5126  0.4982     0.0144  0.0027  0.0260      0.0006        0.0248         0.1705
+TTT    Early       merged__relaxed_f1          1337 640  0.5009  0.5080    -0.0071 -0.0187  0.0039      0.1675       -0.0154        -0.0684
+TTT    Early       merged__relaxed_f1          2024 644  0.4923  0.5070    -0.0147 -0.0251 -0.0042      0.0217       -0.0279        -0.1145
+TTT    Early       merged__relaxed_f1 mean_of_seeds 658  0.4882  0.4906    -0.0024 -0.0106  0.0055      0.5847       -0.0059        -0.0268
+TTT    Early           merged__cldice            42 636  0.4319  0.4290     0.0029 -0.0104  0.0162      0.5612        0.0068         0.0295
+TTT    Early           merged__cldice          1337 640  0.4264  0.4364    -0.0100 -0.0214  0.0012      0.0211       -0.0147        -0.1169
+TTT    Early           merged__cldice          2024 644  0.4132  0.4361    -0.0229 -0.0345 -0.0114      0.0000       -0.0370        -0.2365
+TTT    Early           merged__cldice mean_of_seeds 658  0.4122  0.4219    -0.0098 -0.0179 -0.0016      0.0054       -0.0140        -0.1391
+TTT    Early merged__chamfer_distance            42 552 24.1112 27.7512    -3.6400 -6.0628 -1.2874      0.0000       -0.0608        -0.2781
+TTT    Early merged__chamfer_distance          1337 548 22.8842 25.4485    -2.5643 -4.8699 -0.2643      0.0165       -0.0164        -0.1183
+TTT    Early merged__chamfer_distance          2024 555 25.4456 26.4322    -0.9866 -3.1551  1.0561      0.4930        0.0128        -0.0336
+TTT    Early merged__chamfer_distance mean_of_seeds 557 24.8356 27.3187    -2.4831 -4.2705 -0.7526      0.0001       -0.0239        -0.1866
+TTT     Late       merged__relaxed_f1            42 648  0.5031  0.5012     0.0019 -0.0081  0.0120      0.7822       -0.0018         0.0137
+TTT     Late       merged__relaxed_f1          1337 640  0.5009  0.5003     0.0005 -0.0102  0.0112      0.9611       -0.0008         0.0024
+TTT     Late       merged__relaxed_f1          2024 645  0.4915  0.5023    -0.0108 -0.0219 -0.0004      0.0607       -0.0192        -0.0930
+TTT     Late       merged__relaxed_f1 mean_of_seeds 660  0.4867  0.4894    -0.0027 -0.0096  0.0038      0.6602       -0.0068        -0.0216
+TTT     Late           merged__cldice            42 648  0.4239  0.4309    -0.0070 -0.0185  0.0047      0.1427       -0.0119        -0.0745
+TTT     Late           merged__cldice          1337 640  0.4264  0.4190     0.0074 -0.0045  0.0196      0.2431        0.0139         0.0597
+TTT     Late           merged__cldice          2024 645  0.4126  0.4231    -0.0105 -0.0229  0.0014      0.2519       -0.0182        -0.0583
+TTT     Late           merged__cldice mean_of_seeds 660  0.4109  0.4143    -0.0033 -0.0107  0.0039      0.5231       -0.0043        -0.0320
+TTT     Late merged__chamfer_distance            42 554 24.6187 26.3317    -1.7130 -4.1794  0.7151      0.0063       -0.0166        -0.1340
+TTT     Late merged__chamfer_distance          1337 551 23.2783 25.1099    -1.8316 -3.6304 -0.1170      0.0149       -0.0260        -0.1197
+TTT     Late merged__chamfer_distance          2024 554 25.4627 25.8828    -0.4201 -2.7312  1.7834      0.4509        0.0195         0.0370
+TTT     Late merged__chamfer_distance mean_of_seeds 557 24.8356 26.4683    -1.6327 -3.2317 -0.1258      0.0041       -0.0142        -0.1405
+TTT DEM_only       merged__relaxed_f1            42 644  0.5062  0.4993     0.0069 -0.0035  0.0175      0.1162        0.0108         0.0780
+TTT DEM_only       merged__relaxed_f1          1337 637  0.5032  0.5195    -0.0162 -0.0268 -0.0059      0.0001       -0.0355        -0.1899
+TTT DEM_only       merged__relaxed_f1          2024 648  0.4893  0.4879     0.0014 -0.0107  0.0141      0.4538       -0.0046         0.0373
+TTT DEM_only       merged__relaxed_f1 mean_of_seeds 658  0.4882  0.4907    -0.0025 -0.0102  0.0051      0.5672       -0.0089        -0.0281
+TTT DEM_only           merged__cldice            42 644  0.4265  0.4352    -0.0087 -0.0203  0.0029      0.2128       -0.0135        -0.0633
+TTT DEM_only           merged__cldice          1337 637  0.4284  0.4526    -0.0242 -0.0362 -0.0123      0.0000       -0.0410        -0.2493
+TTT DEM_only           merged__cldice          2024 648  0.4107  0.4161    -0.0055 -0.0191  0.0079      0.7327       -0.0044        -0.0175
+TTT DEM_only           merged__cldice mean_of_seeds 658  0.4122  0.4246    -0.0124 -0.0214 -0.0039      0.0064       -0.0198        -0.1360
+TTT DEM_only merged__chamfer_distance            42 553 24.6542 26.3817    -1.7275 -3.8891  0.3349      0.0001       -0.0388        -0.1878
+TTT DEM_only merged__chamfer_distance          1337 551 23.3205 23.6309    -0.3104 -2.2013  1.6105      0.9316        0.0055         0.0042
+TTT DEM_only merged__chamfer_distance          2024 555 25.5816 27.9479    -2.3663 -4.9274  0.1039      0.0726       -0.0020        -0.0880
+TTT DEM_only merged__chamfer_distance mean_of_seeds 557 24.8356 26.6434    -1.8079 -3.6569 -0.0916      0.0000       -0.0188        -0.2071
+TTT  MS_only       merged__relaxed_f1            42 645  0.5054  0.4721     0.0333  0.0212  0.0459      0.0000        0.0596         0.2832
+TTT  MS_only       merged__relaxed_f1          1337 638  0.5024  0.4877     0.0147  0.0024  0.0267      0.0034        0.0265         0.1451
+TTT  MS_only       merged__relaxed_f1          2024 644  0.4923  0.4768     0.0155  0.0028  0.0280      0.0001        0.0267         0.1942
+TTT  MS_only       merged__relaxed_f1 mean_of_seeds 656  0.4896  0.4689     0.0208  0.0114  0.0301      0.0000        0.0371         0.2511
+TTT  MS_only           merged__cldice            42 645  0.4258  0.4028     0.0230  0.0103  0.0357      0.0001        0.0415         0.1978
+TTT  MS_only           merged__cldice          1337 638  0.4277  0.4134     0.0143  0.0016  0.0272      0.0086        0.0272         0.1332
+TTT  MS_only           merged__cldice          2024 644  0.4132  0.4051     0.0081 -0.0055  0.0214      0.0154        0.0162         0.1234
+TTT  MS_only           merged__cldice mean_of_seeds 656  0.4134  0.3986     0.0148  0.0053  0.0242      0.0005        0.0279         0.1752
+TTT  MS_only merged__chamfer_distance            42 554 24.6187 29.6145    -4.9958 -7.6139 -2.3504      0.0000       -0.1075        -0.3254
+TTT  MS_only merged__chamfer_distance          1337 551 23.3162 28.3085    -4.9924 -7.6957 -2.2856      0.0000       -0.0723        -0.2712
+TTT  MS_only merged__chamfer_distance          2024 554 25.5926 28.4690    -2.8764 -5.2532 -0.4671      0.0000       -0.0575        -0.2317
+TTT  MS_only merged__chamfer_distance mean_of_seeds 557 24.8356 29.1665    -4.3309 -6.4493 -2.2044      0.0000       -0.0895        -0.3602
+[stage stats] done in 0.1 min
+
+##############################################################################
+#  STAGE: report
+##############################################################################
+report written to experiments\report
+[stage report] done in 0.0 min
+
+ALL DONE in 207.00 h.  Failed jobs: none

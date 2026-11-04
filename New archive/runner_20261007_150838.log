@@ -1,0 +1,97 @@
+
+Output root : experiments
+Stages      : selftest=ON, train=ON, evaluate=ON, perturb=ON, probe=ON, ceiling=ON, complexity=ON, estimators=ON, stats=ON, report=ON
+Groups      : fusion_core=ON, solo=ON, early_late=ON, loss_ablation=ON
+Jobs        : 27
+   Simple_s42                         fusion_core    done      
+   Simple_s1337                       fusion_core    done      
+   Simple_s2024                       fusion_core    done      
+   SRA_s42                            fusion_core    done      
+   SRA_s1337                          fusion_core    done      
+   SRA_s2024                          fusion_core    done      
+   TTT_s42                            fusion_core    done      
+   TTT_s1337                          fusion_core    done      
+   TTT_s2024                          fusion_core    resumable 
+   DEM_only_s42                       solo           resumable 
+   DEM_only_s1337                     solo           todo      
+   DEM_only_s2024                     solo           todo      
+   MS_only_s42                        solo           todo      
+   MS_only_s1337                      solo           todo      
+   MS_only_s2024                      solo           todo      
+   Early_s42                          early_late     todo      
+   Early_s1337                        early_late     todo      
+   Early_s2024                        early_late     todo      
+   Late_s42                           early_late     todo      
+   Late_s1337                         early_late     todo      
+   Late_s2024                         early_late     todo      
+   TTT_abl-no_pu_s42                  loss_ablation  todo      {'pu_threshold': 1.01}
+   TTT_abl-no_margin_s42              loss_ablation  todo      {'margin': 0.0}
+   TTT_abl-no_skeleton_boost_s42      loss_ablation  todo      {'skeleton_boost': 0.0}
+   TTT_abl-no_cldice_s42              loss_ablation  done      {'w_cldice': 0.0}
+   TTT_abl-conventional_cldice_s42    loss_ablation  todo      {'cldice_mode': 'conventional'}
+   TTT_abl-no_merge_loss_s42          loss_ablation  todo      {'w_merge': 0.0}
+Eval weights: ['best_f1', 'soup_greedy', 'soup_uniform']   (primary: best_f1)
+device: cuda
+
+##############################################################################
+#  STAGE: selftest
+##############################################################################
+  [PASS] soft erode/dilate equal scipy min/max filters
+  [PASS] soft skeleton equals a literal transcription of the clDice algorithm
+  [PASS] clDice loss: perfect->0, empty prediction->1 (fixed) [conventional gives ~0 = the bug], empty/empty->0
+  [PASS] weighted dead-zone MSE/MAE (skeleton boost, PU mask, valid mask) equals brute-force loops
+  [PASS] merge-consistency loss equals the per-class loss when N=1
+  [PASS] nodata pixels do not influence the clDice term
+  [PASS] relaxed precision/recall/F1 and boundary-F equal brute-force chessboard-distance computations
+  [PASS] perfect prediction scores 1; a class absent from the set is excluded from the macro mean
+  [PASS] empty prediction: recall 0, chamfer undefined (NaN, not "perfect"), coverage 0
+  [PASS] Kulpa length: straight line, no double counting at corners, pixel weights sum to length
+  [PASS] quadratic weighted kappa equals sklearn
+  [PASS] reference confusion: rows sum to 1, exact=0.32, within-one=0.63; ceiling is analytic
+      synthetic length calibration: {"isolated": {"n": 12, "coarea_ratio_mean": 0.9350054485983565, "coarea_ratio_std": 0.00558807086862228, "kulpa_ratio_mean": 1.001464149586978, "kulpa_ratio_std": 0.008532385367645999}, "crossing": {"n": 12, "coarea_ratio_mean": 0.9049074258537216, "coarea_ratio_std": 0.03565990115149595, "kulpa_ratio_mean": 0.9952967083454567, "kulpa_ratio_std": 0.011539971634713242}}
+  [PASS] coarea-formula length estimator recovers the length of isolated synthetic lines (within 15%)
+  [PASS] soup averaging: uniform mean of float tensors, integer buffers kept
+  [PASS] all 7 model variants: forward shape, strict round-trip load, wrong-variant load is rejected
+[stage selftest] done in 0.3 min
+
+##############################################################################
+#  STAGE: train
+##############################################################################
+[1/27] Simple_s42: already done
+[2/27] Simple_s1337: already done
+[3/27] Simple_s2024: already done
+[4/27] SRA_s42: already done
+[5/27] SRA_s1337: already done
+[6/27] SRA_s2024: already done
+[7/27] TTT_s42: already done
+[8/27] TTT_s1337: already done
+
+[9/27] TRAIN TTT_s2024  (fusion_core)
+
+[10/27] TRAIN DEM_only_s42  (solo)
+
+[11/27] TRAIN DEM_only_s1337  (solo)
+
+[12/27] TRAIN DEM_only_s2024  (solo)
+
+[13/27] TRAIN MS_only_s42  (solo)
+
+[14/27] TRAIN MS_only_s1337  (solo)
+
+[15/27] TRAIN MS_only_s2024  (solo)
+
+[16/27] TRAIN Early_s42  (early_late)
+
+[17/27] TRAIN Early_s1337  (early_late)
+
+[18/27] TRAIN Early_s2024  (early_late)
+
+[19/27] TRAIN Late_s42  (early_late)
+
+[20/27] TRAIN Late_s1337  (early_late)
+
+[21/27] TRAIN Late_s2024  (early_late)
+
+[22/27] TRAIN TTT_abl-no_pu_s42  (loss_ablation)
+
+[23/27] TRAIN TTT_abl-no_margin_s42  (loss_ablation)
