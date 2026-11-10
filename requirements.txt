@@ -1,0 +1,19 @@
+# Environment used for the paper: Python 3.11.15, PyTorch 2.10.0, one RTX 4060 laptop GPU (8 GB).
+# segmentation_models_pytorch and timm versions were not recorded at training time;
+# any release that provides the MiT-B3 encoder ("mit_b3") and timm.layers.trunc_normal_ works.
+torch==2.10.0
+torchvision
+segmentation-models-pytorch
+timm
+numpy
+pandas
+scipy
+scikit-image
+openpyxl
+matplotlib
+tqdm
+# data preparation and the length estimators
+rasterio
+geopandas
+shapely
+pyogrio

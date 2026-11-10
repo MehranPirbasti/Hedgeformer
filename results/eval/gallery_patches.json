@@ -1,0 +1,22 @@
+{
+  "seed": 20240101,
+  "n": 16,
+  "patches_top_to_bottom": [
+    "Scene2_R00512_C06656_tr_non",
+    "Scene2_R03072_C06656_ce_non",
+    "Scene1_R06656_C07680_bl_non",
+    "Scene2_R06656_C03584_br_non",
+    "Scene1_R12800_C08192_tl_non",
+    "Scene2_R04608_C01536_tl_non",
+    "Scene1_R14336_C05632_tl_non",
+    "Scene2_R13312_C05632_bl_non",
+    "Scene2_R09728_C04096_tr_non",
+    "Scene1_R14336_C05120_bl_non",
+    "Scene2_R10752_C06656_bl_non",
+    "Scene2_R09216_C09728_ce_non",
+    "Scene1_R02560_C10240_tl_non",
+    "Scene2_R06656_C03584_tl_non",
+    "Scene2_R03584_C07168_bl_non",
+    "Scene2_R10752_C07680_tr_non"
+  ]
+}

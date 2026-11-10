@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper (preferred) or this repository."
+title: "HedgeFormer: Test-Time-Training Cross-Modal Fusion of Pléiades Neo Imagery and a Digital Surface Model for Hedgerow Height Mapping"
+type: software
+authors:
+  - family-names: Alizadeh Pirbasti
+    given-names: Mehran
+  - family-names: Hemmati
+    given-names: Emadoddin
+  - family-names: Alizadeh
+    given-names: Niloofar
+  - family-names: McArdle
+    given-names: Gavin
+  - family-names: Akbari
+    given-names: Vahid
+repository-code: "https://github.com/MehranPirbasti/Hedgeformer"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24106458
+    description: "Trained TTT checkpoints (seeds 42, 1337, 2024) on Zenodo"
+license: MIT
+date-released: 2026-11-09
+preferred-citation:
+  type: article
+  title: "HedgeFormer: Test-Time-Training Cross-Modal Fusion of Pléiades Neo Imagery and a Digital Surface Model for Hedgerow Height Mapping"
+  authors:
+    - family-names: Alizadeh Pirbasti
+      given-names: Mehran
+    - family-names: Hemmati
+      given-names: Emadoddin
+    - family-names: Alizadeh
+      given-names: Niloofar
+    - family-names: McArdle
+      given-names: Gavin
+    - family-names: Akbari
+      given-names: Vahid
+  journal: "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing"
+  year: 2026
+  notes: "Submitted."

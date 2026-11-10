@@ -1,0 +1,123 @@
+{
+  "run_dir": "experiments\\runs\\Simple_s42",
+  "variant": "Simple",
+  "seed": 42,
+  "num_classes": 7,
+  "best": {
+    "f1": {
+      "value": 0.43081059696892543,
+      "epoch": 10
+    },
+    "rmse": {
+      "value": 0.6313100035339559,
+      "epoch": 1
+    },
+    "chamfer": {
+      "value": 22.175684605638775,
+      "epoch": 3
+    },
+    "hd95": {
+      "value": 77.72256265785279,
+      "epoch": 7
+    }
+  },
+  "soup": {
+    "ingredient_val_f1": {
+      "best_f1.pth": 0.43081059696892543,
+      "best_hd95.pth": 0.4278450008362621,
+      "best_chamfer.pth": 0.40629435875316827,
+      "epoch_043.pth": 0.3879525844139556,
+      "epoch_042.pth": 0.3876534819907667,
+      "epoch_041.pth": 0.3868807815587424,
+      "epoch_044.pth": 0.38587172620488197,
+      "epoch_045.pth": 0.3855904909342803,
+      "epoch_049.pth": 0.3836621425155122,
+      "epoch_048.pth": 0.383411823565761,
+      "epoch_047.pth": 0.38339505597658147,
+      "epoch_046.pth": 0.38321093171812853,
+      "epoch_050.pth": 0.3824718589167367,
+      "best_rmse.pth": 0.37606283558702996
+    },
+    "greedy_chosen": [
+      "best_f1.pth",
+      "best_hd95.pth",
+      "epoch_043.pth"
+    ],
+    "greedy_val_f1": 0.4366453269068611,
+    "greedy_log": [
+      {
+        "path": "best_f1.pth",
+        "accepted": true,
+        "val_f1": 0.43081059696892543
+      },
+      {
+        "path": "best_hd95.pth",
+        "accepted": true,
+        "val_f1": 0.4308735733739905
+      },
+      {
+        "path": "best_chamfer.pth",
+        "accepted": false,
+        "val_f1": 0.4262924823932894
+      },
+      {
+        "path": "epoch_043.pth",
+        "accepted": true,
+        "val_f1": 0.4366453269068611
+      },
+      {
+        "path": "epoch_042.pth",
+        "accepted": false,
+        "val_f1": 0.4361644974897431
+      },
+      {
+        "path": "epoch_041.pth",
+        "accepted": false,
+        "val_f1": 0.4360923448506722
+      },
+      {
+        "path": "epoch_044.pth",
+        "accepted": false,
+        "val_f1": 0.436018323889709
+      },
+      {
+        "path": "epoch_045.pth",
+        "accepted": false,
+        "val_f1": 0.43580857754083835
+      },
+      {
+        "path": "epoch_049.pth",
+        "accepted": false,
+        "val_f1": 0.43576294335718435
+      },
+      {
+        "path": "epoch_048.pth",
+        "accepted": false,
+        "val_f1": 0.43587102644504633
+      },
+      {
+        "path": "epoch_047.pth",
+        "accepted": false,
+        "val_f1": 0.43571048839589677
+      },
+      {
+        "path": "epoch_046.pth",
+        "accepted": false,
+        "val_f1": 0.4358367523528316
+      },
+      {
+        "path": "epoch_050.pth",
+        "accepted": false,
+        "val_f1": 0.4358183483219634
+      },
+      {
+        "path": "best_rmse.pth",
+        "accepted": false,
+        "val_f1": 0.43241630013661725
+      }
+    ],
+    "uniform_val_f1": 0.4317373723382835,
+    "best_single_val_f1": 0.43081059696892543
+  },
+  "finished": "2026-09-22 18:06:54"
+}

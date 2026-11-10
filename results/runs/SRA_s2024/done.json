@@ -1,0 +1,123 @@
+{
+  "run_dir": "experiments\\runs\\SRA_s2024",
+  "variant": "SRA",
+  "seed": 2024,
+  "num_classes": 7,
+  "best": {
+    "f1": {
+      "value": 0.43265958002839405,
+      "epoch": 18
+    },
+    "rmse": {
+      "value": 0.6485146676868776,
+      "epoch": 1
+    },
+    "chamfer": {
+      "value": 20.42548933069213,
+      "epoch": 6
+    },
+    "hd95": {
+      "value": 76.84944269862926,
+      "epoch": 6
+    }
+  },
+  "soup": {
+    "ingredient_val_f1": {
+      "best_f1.pth": 0.43265958002839405,
+      "best_chamfer.pth": 0.42724467768115476,
+      "best_hd95.pth": 0.42724467768115476,
+      "epoch_041.pth": 0.3965258085195823,
+      "epoch_042.pth": 0.3953454475128947,
+      "epoch_045.pth": 0.394106417051484,
+      "epoch_043.pth": 0.3936824530741213,
+      "epoch_044.pth": 0.3935301955654912,
+      "epoch_046.pth": 0.39332047107163115,
+      "epoch_047.pth": 0.3921534734873462,
+      "epoch_049.pth": 0.39164663120669246,
+      "epoch_050.pth": 0.39139118525945216,
+      "epoch_048.pth": 0.39127890773825236,
+      "best_rmse.pth": 0.37007037907149437
+    },
+    "greedy_chosen": [
+      "best_f1.pth",
+      "best_chamfer.pth",
+      "epoch_041.pth"
+    ],
+    "greedy_val_f1": 0.43969144416352524,
+    "greedy_log": [
+      {
+        "path": "best_f1.pth",
+        "accepted": true,
+        "val_f1": 0.43265958002839405
+      },
+      {
+        "path": "best_chamfer.pth",
+        "accepted": true,
+        "val_f1": 0.43814439541601313
+      },
+      {
+        "path": "best_hd95.pth",
+        "accepted": false,
+        "val_f1": 0.4355511131123798
+      },
+      {
+        "path": "epoch_041.pth",
+        "accepted": true,
+        "val_f1": 0.43969144416352524
+      },
+      {
+        "path": "epoch_042.pth",
+        "accepted": false,
+        "val_f1": 0.43927815184780133
+      },
+      {
+        "path": "epoch_045.pth",
+        "accepted": false,
+        "val_f1": 0.43904817952838265
+      },
+      {
+        "path": "epoch_043.pth",
+        "accepted": false,
+        "val_f1": 0.43907657322704424
+      },
+      {
+        "path": "epoch_044.pth",
+        "accepted": false,
+        "val_f1": 0.4391176008021967
+      },
+      {
+        "path": "epoch_046.pth",
+        "accepted": false,
+        "val_f1": 0.4388903456413953
+      },
+      {
+        "path": "epoch_047.pth",
+        "accepted": false,
+        "val_f1": 0.4388119969500098
+      },
+      {
+        "path": "epoch_049.pth",
+        "accepted": false,
+        "val_f1": 0.43883050480105484
+      },
+      {
+        "path": "epoch_050.pth",
+        "accepted": false,
+        "val_f1": 0.4390285862657829
+      },
+      {
+        "path": "epoch_048.pth",
+        "accepted": false,
+        "val_f1": 0.43883949534896105
+      },
+      {
+        "path": "best_rmse.pth",
+        "accepted": false,
+        "val_f1": 0.4394742990728798
+      }
+    ],
+    "uniform_val_f1": 0.43925203352696907,
+    "best_single_val_f1": 0.43265958002839405
+  },
+  "finished": "2026-09-30 00:27:23"
+}

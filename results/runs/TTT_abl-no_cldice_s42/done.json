@@ -1,0 +1,122 @@
+{
+  "run_dir": "experiments\\runs\\TTT_abl-no_cldice_s42",
+  "variant": "TTT",
+  "seed": 42,
+  "num_classes": 7,
+  "best": {
+    "f1": {
+      "value": 0.36054413447055544,
+      "epoch": 18
+    },
+    "rmse": {
+      "value": 0.5206993197388504,
+      "epoch": 9
+    },
+    "chamfer": {
+      "value": 19.655756026097887,
+      "epoch": 13
+    },
+    "hd95": {
+      "value": 76.85121865494989,
+      "epoch": 13
+    }
+  },
+  "soup": {
+    "ingredient_val_f1": {
+      "best_f1.pth": 0.36054448011108714,
+      "epoch_041.pth": 0.3351510609549807,
+      "epoch_045.pth": 0.3333697973882354,
+      "epoch_044.pth": 0.3331437029809005,
+      "epoch_043.pth": 0.33298224525509806,
+      "epoch_042.pth": 0.3317295476926213,
+      "epoch_048.pth": 0.33155954483833966,
+      "epoch_049.pth": 0.33136581997337505,
+      "epoch_047.pth": 0.33119458287750747,
+      "epoch_050.pth": 0.3309410533164413,
+      "epoch_046.pth": 0.3309321315058888,
+      "best_chamfer.pth": 0.3276448258359314,
+      "best_hd95.pth": 0.3276448258359314,
+      "best_rmse.pth": 0.3064200338903786
+    },
+    "greedy_chosen": [
+      "best_f1.pth",
+      "epoch_041.pth"
+    ],
+    "greedy_val_f1": 0.3670457285131368,
+    "greedy_log": [
+      {
+        "path": "best_f1.pth",
+        "accepted": true,
+        "val_f1": 0.36054448011108714
+      },
+      {
+        "path": "epoch_041.pth",
+        "accepted": true,
+        "val_f1": 0.3670457285131368
+      },
+      {
+        "path": "epoch_045.pth",
+        "accepted": false,
+        "val_f1": 0.36278612874116817
+      },
+      {
+        "path": "epoch_044.pth",
+        "accepted": false,
+        "val_f1": 0.3623925268838218
+      },
+      {
+        "path": "epoch_043.pth",
+        "accepted": false,
+        "val_f1": 0.36242481306617763
+      },
+      {
+        "path": "epoch_042.pth",
+        "accepted": false,
+        "val_f1": 0.36196707013442886
+      },
+      {
+        "path": "epoch_048.pth",
+        "accepted": false,
+        "val_f1": 0.36271724457813953
+      },
+      {
+        "path": "epoch_049.pth",
+        "accepted": false,
+        "val_f1": 0.36251418472850194
+      },
+      {
+        "path": "epoch_047.pth",
+        "accepted": false,
+        "val_f1": 0.36270294735969194
+      },
+      {
+        "path": "epoch_050.pth",
+        "accepted": false,
+        "val_f1": 0.3623889098976682
+      },
+      {
+        "path": "epoch_046.pth",
+        "accepted": false,
+        "val_f1": 0.36250423267454696
+      },
+      {
+        "path": "best_chamfer.pth",
+        "accepted": false,
+        "val_f1": 0.3646754039915165
+      },
+      {
+        "path": "best_hd95.pth",
+        "accepted": false,
+        "val_f1": 0.3646754039915165
+      },
+      {
+        "path": "best_rmse.pth",
+        "accepted": false,
+        "val_f1": 0.3418262034642946
+      }
+    ],
+    "uniform_val_f1": 0.3581716926699247,
+    "best_single_val_f1": 0.36054448011108714
+  },
+  "finished": "2026-10-05 21:54:20"
+}

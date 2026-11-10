@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+*.egg-info/
+
+# checkpoints and tiles are never committed (size and licence)
+*.pth
+*.pt
+*.ckpt
+*.npz
+!results/eval/**/per_patch.npz
+
+# imagery and rasters
+*.tif
+*.tiff
+*.jp2
+*.img
+
+# logs and scratch
+*.log
+runner*.log
+experiments/
+scratch/
+.DS_Store
+Thumbs.db
